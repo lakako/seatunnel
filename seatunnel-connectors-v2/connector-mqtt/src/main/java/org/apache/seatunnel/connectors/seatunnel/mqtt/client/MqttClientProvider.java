@@ -1,27 +1,33 @@
 package org.apache.seatunnel.connectors.seatunnel.mqtt.client;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.seatunnel.common.utils.JsonUtils;
 import org.apache.seatunnel.connectors.seatunnel.mqtt.config.MqttParameter;
+
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 
 @Slf4j
-public class MqttClientProvider implements AutoCloseable{
+public class MqttClientProvider implements AutoCloseable {
 
     private final MqttClient mqttClient;
 
     public MqttClientProvider(MqttParameter mqttParameter) {
         try {
-            this.mqttClient = new MqttClient(
-                    mqttParameter.getBrokerUrl(), mqttParameter.getClientId());
+            this.mqttClient =
+                    new MqttClient(mqttParameter.getBrokerUrl(), mqttParameter.getClientId());
             MqttConnectOptions options = new MqttConnectOptions();
-            options.setUserName(mqttParameter.getUsername());
-            options.setPassword(mqttParameter.getPassword().toCharArray());
+            if(mqttParameter.getUsername() != null) {
+                options.setUserName(mqttParameter.getUsername());
+            }
+            if(mqttParameter.getPassword() != null) {
+                options.setPassword(mqttParameter.getPassword().toCharArray());
+            }
             options.setConnectionTimeout(60);
             options.setKeepAliveInterval(60);
             this.mqttClient.connect(options);

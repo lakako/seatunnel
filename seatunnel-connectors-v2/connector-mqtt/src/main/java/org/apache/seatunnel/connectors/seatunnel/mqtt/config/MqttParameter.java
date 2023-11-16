@@ -2,7 +2,6 @@ package org.apache.seatunnel.connectors.seatunnel.mqtt.config;
 
 import org.apache.seatunnel.shade.com.typesafe.config.Config;
 
-
 import lombok.Data;
 import scala.Serializable;
 
@@ -19,6 +18,6 @@ public class MqttParameter implements Serializable {
         this.setTopic(pluginConfig.getString(MqttConfig.TOPIC.key()));
         this.setUsername(pluginConfig.getString(MqttConfig.USERNAME.key()));
         this.setPassword(pluginConfig.getString(MqttConfig.PASSWORD.key()));
-
+        this.setPassword(pluginConfig.getString(MqttConfig.CLIENT_ID.key()));
     }
 }

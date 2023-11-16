@@ -1,11 +1,5 @@
 package org.apache.seatunnel.connectors.seatunnel.mqtt.source;
 
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.ReadContext;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.seatunnel.api.serialization.DeserializationSchema;
 import org.apache.seatunnel.api.source.Collector;
 import org.apache.seatunnel.api.table.type.SeaTunnelRow;
@@ -18,8 +12,21 @@ import org.apache.seatunnel.connectors.seatunnel.mqtt.config.MqttParameter;
 import org.apache.seatunnel.connectors.seatunnel.mqtt.exception.MqttConnectorErrorCode;
 import org.apache.seatunnel.connectors.seatunnel.mqtt.exception.MqttConnectorException;
 
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
+import com.jayway.jsonpath.ReadContext;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
 
 @Slf4j
 @Setter
@@ -29,7 +36,7 @@ public class MqttSourceReader extends AbstractSingleSplitReader<SeaTunnelRow> {
     protected MqttClientProvider mqttClient;
     private final DeserializationCollector deserializationCollector;
     private static final Option[] DEFAULT_OPTIONS = {
-            Option.SUPPRESS_EXCEPTIONS, Option.ALWAYS_RETURN_LIST, Option.DEFAULT_PATH_LEAF_TO_NULL
+        Option.SUPPRESS_EXCEPTIONS, Option.ALWAYS_RETURN_LIST, Option.DEFAULT_PATH_LEAF_TO_NULL
     };
     private JsonPath[] jsonPaths;
     private final JsonField jsonField;
@@ -42,23 +49,23 @@ public class MqttSourceReader extends AbstractSingleSplitReader<SeaTunnelRow> {
     private static final long THREAD_WAIT_TIME = 500L;
 
     private Queue<String> dataList = new ArrayDeque<>();
+
     public void addData(String data) {
         dataList.add(data);
     }
 
-
-    public MqttSourceReader(MqttParameter httpParameter,
-                            SingleSplitReaderContext context,
-                            DeserializationSchema<SeaTunnelRow> deserializationSchema,
-                            JsonField jsonField,
-                            String contentJson) {
+    public MqttSourceReader(
+            MqttParameter httpParameter,
+            SingleSplitReaderContext context,
+            DeserializationSchema<SeaTunnelRow> deserializationSchema,
+            JsonField jsonField,
+            String contentJson) {
         this.context = context;
         this.mqttParameter = httpParameter;
         this.deserializationCollector = new DeserializationCollector(deserializationSchema);
         this.jsonField = jsonField;
         this.contentJson = contentJson;
     }
-
 
     @Override
     public void open() throws Exception {
@@ -74,7 +81,7 @@ public class MqttSourceReader extends AbstractSingleSplitReader<SeaTunnelRow> {
 
     @Override
     public void pollNext(Collector<SeaTunnelRow> output) throws Exception {
-        if(dataList.isEmpty()) return;
+        if (dataList.isEmpty()) return;
 
         try {
             while (!dataList.isEmpty()) {
@@ -97,6 +104,7 @@ public class MqttSourceReader extends AbstractSingleSplitReader<SeaTunnelRow> {
 
         deserializationCollector.collect(data.getBytes(), output);
     }
+
     private List<Map<String, String>> parseToMap(List<List<String>> datas, JsonField jsonField) {
         List<Map<String, String>> decodeDatas = new ArrayList<>(datas.size());
         String[] keys = jsonField.getFields().keySet().toArray(new String[] {});

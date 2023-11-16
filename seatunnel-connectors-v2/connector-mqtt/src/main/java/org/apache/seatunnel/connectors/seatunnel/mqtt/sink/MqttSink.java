@@ -1,8 +1,10 @@
 package org.apache.seatunnel.connectors.seatunnel.mqtt.sink;
 
 import com.google.auto.service.AutoService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.seatunnel.api.common.PrepareFailException;
 import org.apache.seatunnel.api.common.SeaTunnelAPIErrorCode;
+import org.apache.seatunnel.api.configuration.ReadonlyConfig;
 import org.apache.seatunnel.api.sink.SeaTunnelSink;
 import org.apache.seatunnel.api.sink.SinkWriter;
 import org.apache.seatunnel.api.table.type.SeaTunnelRow;
@@ -21,16 +23,20 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @AutoService(SeaTunnelSink.class)
 public class MqttSink extends AbstractSimpleSink<SeaTunnelRow, Void> {
     protected final MqttParameter mqttParameter = new MqttParameter();
     protected SeaTunnelRowType seaTunnelRowType;
     protected Config pluginConfig;
 
+
+
     @Override
     public String getPluginName() {
         return "Mqtt";
     }
+
 
     @Override
     public void prepare(Config pluginConfig) throws PrepareFailException {
@@ -44,6 +50,9 @@ public class MqttSink extends AbstractSimpleSink<SeaTunnelRow, Void> {
                             getPluginName(), PluginType.SINK, result.getMsg()));
         }
         mqttParameter.setBrokerUrl(pluginConfig.getString(MqttConfig.BROKER_URL.key()));
+        mqttParameter.setTopic(pluginConfig.getString(MqttConfig.TOPIC.key()));
+        mqttParameter.setClientId(pluginConfig.getString(MqttConfig.CLIENT_ID.key()));
+        log.debug("{}", mqttParameter);
     }
 
     @Override

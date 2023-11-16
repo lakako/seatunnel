@@ -1,6 +1,8 @@
 package org.apache.seatunnel.connectors.seatunnel.mqtt.source;
 
-import com.google.auto.service.AutoService;
+import org.apache.seatunnel.shade.com.typesafe.config.Config;
+import org.apache.seatunnel.shade.com.typesafe.config.ConfigRenderOptions;
+
 import org.apache.seatunnel.api.common.JobContext;
 import org.apache.seatunnel.api.common.PrepareFailException;
 import org.apache.seatunnel.api.common.SeaTunnelAPIErrorCode;
@@ -24,8 +26,8 @@ import org.apache.seatunnel.connectors.seatunnel.mqtt.config.MqttConfig;
 import org.apache.seatunnel.connectors.seatunnel.mqtt.config.MqttParameter;
 import org.apache.seatunnel.connectors.seatunnel.mqtt.exception.MqttConnectorException;
 import org.apache.seatunnel.format.json.JsonDeserializationSchema;
-import org.apache.seatunnel.shade.com.typesafe.config.Config;
-import org.apache.seatunnel.shade.com.typesafe.config.ConfigRenderOptions;
+
+import com.google.auto.service.AutoService;
 
 @AutoService(SeaTunnelSource.class)
 public class MqttSource extends AbstractSingleSplitSource<SeaTunnelRow> {
@@ -50,7 +52,8 @@ public class MqttSource extends AbstractSingleSplitSource<SeaTunnelRow> {
 
     @Override
     public void prepare(Config pluginConfig) throws PrepareFailException {
-        CheckResult result = CheckConfigUtil.checkAllExists(pluginConfig, MqttConfig.BROKER_URL.key());
+        CheckResult result =
+                CheckConfigUtil.checkAllExists(pluginConfig, MqttConfig.BROKER_URL.key());
         if (!result.isSuccess()) {
             throw new MqttConnectorException(
                     SeaTunnelAPIErrorCode.CONFIG_VALIDATION_FAILED,
@@ -61,7 +64,6 @@ public class MqttSource extends AbstractSingleSplitSource<SeaTunnelRow> {
         this.mqttParameter.buildWithConfig(pluginConfig);
         buildSchemaWithConfig(pluginConfig);
     }
-
 
     @Override
     public AbstractSingleSplitReader<SeaTunnelRow> createReader(
@@ -76,11 +78,9 @@ public class MqttSource extends AbstractSingleSplitSource<SeaTunnelRow> {
 
     protected void buildSchemaWithConfig(Config pluginConfig) {
         if (pluginConfig.hasPath(TableSchemaOptions.SCHEMA.key())) {
-            this.deserializationSchema =
-                    new JsonDeserializationSchema(false, false, rowType);
+            this.deserializationSchema = new JsonDeserializationSchema(false, false, rowType);
             if (pluginConfig.hasPath(MqttConfig.JSON_FIELD.key())) {
-                jsonField =
-                        getJsonField(pluginConfig.getConfig(MqttConfig.JSON_FIELD.key()));
+                jsonField = getJsonField(pluginConfig.getConfig(MqttConfig.JSON_FIELD.key()));
             }
             if (pluginConfig.hasPath(MqttConfig.CONTENT_FIELD.key())) {
                 contentField = pluginConfig.getString(MqttConfig.CONTENT_FIELD.key());

@@ -1,6 +1,5 @@
 package org.apache.seatunnel.connectors.seatunnel.mqtt.config;
 
-import lombok.Getter;
 import org.apache.seatunnel.api.configuration.Option;
 import org.apache.seatunnel.api.configuration.Options;
 
@@ -24,10 +23,7 @@ public class MqttConfig {
                     .withDescription("broker password");
 
     public static final Option<String> TOPIC =
-            Options.key("topic")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("mqtt topic");
+            Options.key("topic").stringType().noDefaultValue().withDescription("mqtt topic");
 
     public static final Option<String> CLIENT_ID =
             Options.key("client_id")
@@ -47,5 +43,4 @@ public class MqttConfig {
                     .noDefaultValue()
                     .withDescription(
                             "SeaTunnel content field.This parameter can get some json data, and there is no need to configure each field separately.");
-
 }

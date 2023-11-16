@@ -7,6 +7,4 @@ public class MqttConnectorException extends SeaTunnelRuntimeException {
     public MqttConnectorException(SeaTunnelErrorCode seaTunnelErrorCode, String errorMessage) {
         super(seaTunnelErrorCode, errorMessage);
     }
-
-
 }

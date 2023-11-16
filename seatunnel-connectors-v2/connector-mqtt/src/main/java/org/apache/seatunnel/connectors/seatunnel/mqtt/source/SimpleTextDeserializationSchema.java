@@ -17,11 +17,12 @@
 
 package org.apache.seatunnel.connectors.seatunnel.mqtt.source;
 
-import lombok.AllArgsConstructor;
 import org.apache.seatunnel.api.serialization.DeserializationSchema;
 import org.apache.seatunnel.api.table.type.SeaTunnelDataType;
 import org.apache.seatunnel.api.table.type.SeaTunnelRow;
 import org.apache.seatunnel.api.table.type.SeaTunnelRowType;
+
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class SimpleTextDeserializationSchema implements DeserializationSchema<SeaTunnelRow> {

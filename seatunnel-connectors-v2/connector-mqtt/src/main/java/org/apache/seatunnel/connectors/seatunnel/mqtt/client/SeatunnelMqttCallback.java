@@ -1,9 +1,10 @@
 package org.apache.seatunnel.connectors.seatunnel.mqtt.client;
 
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,9 +12,10 @@ import java.util.regex.Pattern;
 @Slf4j
 public class SeatunnelMqttCallback implements MqttCallback {
     String patternString = "test";
+
     @Override
     public void connectionLost(Throwable throwable) {
-      log.error("lost connection");
+        log.error("lost connection");
     }
 
     @Override
@@ -25,13 +27,9 @@ public class SeatunnelMqttCallback implements MqttCallback {
 
         if (matches) {
             String s = new String(mqttMessage.getPayload());
-
         }
-
     }
 
     @Override
-    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
-    }
+    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {}
 }
