@@ -37,9 +37,8 @@ public class MqttClientProvider implements AutoCloseable {
         }
     }
 
-    public void publish(String topic, Object content) throws MqttException {
-        String jsonString = JsonUtils.toJsonString(content);
-        MqttMessage message = new MqttMessage(jsonString.getBytes());
+    public void publish(String topic, String content) throws MqttException {
+        MqttMessage message = new MqttMessage(content.getBytes());
         message.setQos(2);
         mqttClient.publish(topic, message);
     }

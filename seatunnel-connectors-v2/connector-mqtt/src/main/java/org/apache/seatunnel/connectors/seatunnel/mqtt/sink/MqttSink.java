@@ -52,7 +52,10 @@ public class MqttSink extends AbstractSimpleSink<SeaTunnelRow, Void> {
         mqttParameter.setBrokerUrl(pluginConfig.getString(MqttConfig.BROKER_URL.key()));
         mqttParameter.setTopic(pluginConfig.getString(MqttConfig.TOPIC.key()));
         mqttParameter.setClientId(pluginConfig.getString(MqttConfig.CLIENT_ID.key()));
+//        mqttParameter.setUsername(pluginConfig.getString(MqttConfig.USERNAME.key()));
+//        mqttParameter.setPassword(pluginConfig.getString(MqttConfig.PASSWORD.key()));
         log.debug("{}", mqttParameter);
+
     }
 
     @Override
