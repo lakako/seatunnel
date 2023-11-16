@@ -16,8 +16,8 @@ public class MqttParameter implements Serializable {
     public void buildWithConfig(Config pluginConfig) {
         this.setBrokerUrl(pluginConfig.getString(MqttConfig.BROKER_URL.key()));
         this.setTopic(pluginConfig.getString(MqttConfig.TOPIC.key()));
-        this.setUsername(pluginConfig.getString(MqttConfig.USERNAME.key()));
-        this.setPassword(pluginConfig.getString(MqttConfig.PASSWORD.key()));
-        this.setPassword(pluginConfig.getString(MqttConfig.CLIENT_ID.key()));
+        this.setClientId(pluginConfig.getString(MqttConfig.CLIENT_ID.key()));
+//        this.setUsername(pluginConfig.getString(MqttConfig.USERNAME.key()));
+//        this.setPassword(pluginConfig.getString(MqttConfig.PASSWORD.key()));
     }
 }

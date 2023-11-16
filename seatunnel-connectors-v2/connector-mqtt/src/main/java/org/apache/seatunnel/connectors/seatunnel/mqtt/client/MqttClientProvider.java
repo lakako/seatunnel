@@ -30,7 +30,9 @@ public class MqttClientProvider implements AutoCloseable {
             }
             options.setConnectionTimeout(60);
             options.setKeepAliveInterval(60);
+            mqttClient.setCallback(new SeatunnelMqttCallback(mqttParameter.getTopic()));
             this.mqttClient.connect(options);
+            mqttClient.subscribe(mqttParameter.getTopic());
         } catch (MqttException e) {
             log.error("broker connected failed", e);
             throw new RuntimeException("mqtt client init error");

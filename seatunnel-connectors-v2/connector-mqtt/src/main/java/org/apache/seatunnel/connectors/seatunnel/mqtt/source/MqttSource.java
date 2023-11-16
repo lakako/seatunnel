@@ -1,5 +1,6 @@
 package org.apache.seatunnel.connectors.seatunnel.mqtt.source;
 
+import org.apache.seatunnel.api.table.type.SeaTunnelDataType;
 import org.apache.seatunnel.shade.com.typesafe.config.Config;
 import org.apache.seatunnel.shade.com.typesafe.config.ConfigRenderOptions;
 
@@ -51,6 +52,11 @@ public class MqttSource extends AbstractSingleSplitSource<SeaTunnelRow> {
     }
 
     @Override
+    public SeaTunnelDataType<SeaTunnelRow> getProducedType() {
+        return this.rowType;
+    }
+
+    @Override
     public void prepare(Config pluginConfig) throws PrepareFailException {
         CheckResult result =
                 CheckConfigUtil.checkAllExists(pluginConfig, MqttConfig.BROKER_URL.key());
@@ -78,6 +84,7 @@ public class MqttSource extends AbstractSingleSplitSource<SeaTunnelRow> {
 
     protected void buildSchemaWithConfig(Config pluginConfig) {
         if (pluginConfig.hasPath(TableSchemaOptions.SCHEMA.key())) {
+            this.rowType = CatalogTableUtil.buildWithConfig(pluginConfig).getSeaTunnelRowType();
             this.deserializationSchema = new JsonDeserializationSchema(false, false, rowType);
             if (pluginConfig.hasPath(MqttConfig.JSON_FIELD.key())) {
                 jsonField = getJsonField(pluginConfig.getConfig(MqttConfig.JSON_FIELD.key()));
@@ -96,5 +103,10 @@ public class MqttSource extends AbstractSingleSplitSource<SeaTunnelRow> {
         return JsonField.builder()
                 .fields(JsonUtils.toMap(jsonFieldConf.root().render(options)))
                 .build();
+    }
+
+    @Override
+    public void setJobContext(JobContext jobContext) {
+        this.jobContext = jobContext;
     }
 }

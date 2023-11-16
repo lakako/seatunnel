@@ -48,20 +48,20 @@ public class MqttSourceReader extends AbstractSingleSplitReader<SeaTunnelRow> {
 
     private static final long THREAD_WAIT_TIME = 500L;
 
-    private Queue<String> dataList = new ArrayDeque<>();
+    private static Queue<String> dataList = new ArrayDeque<>();
 
-    public void addData(String data) {
+    public static void addData(String data) {
         dataList.add(data);
     }
 
     public MqttSourceReader(
-            MqttParameter httpParameter,
+            MqttParameter mqttParameter,
             SingleSplitReaderContext context,
             DeserializationSchema<SeaTunnelRow> deserializationSchema,
             JsonField jsonField,
             String contentJson) {
         this.context = context;
-        this.mqttParameter = httpParameter;
+        this.mqttParameter = mqttParameter;
         this.deserializationCollector = new DeserializationCollector(deserializationSchema);
         this.jsonField = jsonField;
         this.contentJson = contentJson;
@@ -81,7 +81,10 @@ public class MqttSourceReader extends AbstractSingleSplitReader<SeaTunnelRow> {
 
     @Override
     public void pollNext(Collector<SeaTunnelRow> output) throws Exception {
-        if (dataList.isEmpty()) return;
+        if (dataList.isEmpty()) {
+            log.info("no message");
+            return;
+        }
 
         try {
             while (!dataList.isEmpty()) {
